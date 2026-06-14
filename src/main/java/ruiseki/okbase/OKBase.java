@@ -114,7 +114,7 @@ public class OKBase extends ModBase {
 
     @Override
     public CreativeTabs constructDefaultCreativeTab() {
-        return OKPCreativeTab.INSTANCE;
+        return OKCreativeTab.INSTANCE;
     }
 
     @Override
