@@ -1,24 +1,47 @@
-name: Auto Tag on Merge
+name: Auto Tag on Merge (Template)
 
 on:
   pull_request:
-    branches: [ master, main ]
+    branches: [ main ]
     types:
       - closed
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      branch:
+        description: 'The branch to check and apply the tag to'
+        required: false
+        type: string
+        default: 'main'
+    outputs:
+      generated_tag:
+        description: 'The newly generated semantic date-based tag'
+        value: ${{ jobs.create-tag.outputs.new_tag }}
+    secrets:
+      PAT_TOKEN:
+        description: 'Personal Access Token with repository write permissions to push tags'
+        required: true
+
+concurrency:
+  group: production-deploy-${{ github.repository }}
+  cancel-in-progress: false
 
 jobs:
   create-tag:
     if: |
       github.event_name == 'workflow_dispatch' ||
-      (github.event.pull_request.merged == true)
+      github.event_name == 'workflow_call' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
+
+    outputs:
+      new_tag: ${{ steps.new_tag.outputs.tag }}
 
     steps:
       - name: Checkout target branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.base.ref || github.ref_name }}
+          ref: ${{ inputs.branch || github.event.pull_request.base.ref || github.ref_name }}
           fetch-depth: 0
           token: ${{ secrets.PAT_TOKEN }}
 
@@ -34,7 +57,6 @@ jobs:
         id: new_tag
         run: |
           CURRENT_DATE=$(date +"%y.%m.%d")
-
           LAST_TAG=$(git tag --list "$CURRENT_DATE.*" | sort -V | tail -n 1)
 
           if [ -z "$LAST_TAG" ]; then
@@ -45,7 +67,6 @@ jobs:
           fi
 
           NEW_TAG="${CURRENT_DATE}.${PATCH}"
-
           echo "Generated tag: $NEW_TAG"
           echo "tag=$NEW_TAG" >> $GITHUB_OUTPUT
 
