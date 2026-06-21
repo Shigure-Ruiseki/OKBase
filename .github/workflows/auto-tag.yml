@@ -2,7 +2,7 @@ name: Auto Tag on Merge (Template)
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ master, main ]
     types:
       - closed
   workflow_dispatch:
@@ -12,7 +12,7 @@ on:
         description: 'The branch to check and apply the tag to'
         required: false
         type: string
-        default: 'main'
+        default: 'master'
     outputs:
       generated_tag:
         description: 'The newly generated semantic date-based tag'
