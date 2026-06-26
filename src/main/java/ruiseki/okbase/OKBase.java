@@ -54,7 +54,8 @@ public class OKBase extends ModBase {
     public OKBase() {
         super(Reference.MOD_ID, Reference.MOD_NAME);
         putGenericReference(REFKEY_MOD_VERSION, Reference.VERSION);
-        putGenericReference(REFKEY_VERSION_CHECKER_URL, Reference.UPDATE_URL);
+        putGenericReference(REFKEY_VERSION_CHECKER, ModConfig.useVersionChecker);
+        putGenericReference(REFKEY_VERSION_CHECKER_URL, ruiseki.okcore.Reference.UPDATE_URL);
 
         addInitListeners(new ModRecipes());
     }

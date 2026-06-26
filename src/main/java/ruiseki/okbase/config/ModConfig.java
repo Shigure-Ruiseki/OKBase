@@ -13,4 +13,7 @@ public class ModConfig {
     public static void registerConfig() throws ConfigException {
         ConfigurationManager.registerConfig(ModConfig.class);
     }
+
+    @Config.DefaultBoolean(true)
+    public static boolean useVersionChecker;
 }
