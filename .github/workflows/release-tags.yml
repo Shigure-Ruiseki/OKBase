@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   release-tags:
-    uses: Shigure-Ruiseki/OK-Actions-Workflows/.github/workflows/release-tags.yml@master
+    uses: GTNewHorizons/GTNH-Actions-Workflows/.github/workflows/release-tags.yml@master
     secrets:
       CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
